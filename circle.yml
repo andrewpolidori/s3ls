@@ -24,5 +24,9 @@ deployment:
     tag: /v.*/
     commands:
       # If a new release is tagged in GitHub, build the binaries and upload them to GitHub.
+      - wget "https://github.com/Masterminds/glide/releases/download/$version/glide-$version-linux-amd64.zip"
+      - unzip -o "glide-$version-linux-amd64.zip" -d ~/glide
+      - cd s3dl
+      - glide install
       - build-go-binaries --app-name s3dl --dest-path bin --ld-flags "-X main.VERSION=$CIRCLE_TAG"
       - upload-github-release-assets bin/*
