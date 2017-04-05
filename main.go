@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	logger := NewLogger("s3dl")
+	logger := NewLogger("s3ls")
 
 	args := os.Args[1:]
 
@@ -18,12 +18,9 @@ func main() {
 
 	region := args[0]
 	s3Path := args[1]
-	localPath := args[2]
 
 	s3Bucket := getS3BucketName(s3Path)
 	s3Prefix := getS3Key(s3Path)
-
-	logger.Printf("Download first file from s3://%s/%s/ in %s to %s\n", s3Bucket, s3Prefix, region, localPath)
 
 	session, err := createAwsSession(region)
 	if err != nil {
@@ -39,21 +36,24 @@ func main() {
 		os.Exit(1)
 	}
 
-	firstS3ObjectKey := *s3Objects[0].Key
-
-	downloadFile(s3, s3Bucket, firstS3ObjectKey, localPath)
+	for _, s3object := range s3Objects {
+		fmt.Println(*s3object.Key)
+	}
 }
 
 func validateArgs(args []string) error {
-	if len(args) != 3 {
-		return fmt.Errorf("Error: you must have exactly 3 command line arguments.\n%s", getUsageText())
+	if len(args) != 2 {
+		return fmt.Errorf("Error: you must have exactly 2 command line arguments.\n%s", getUsageText())
 	}
 
 	return nil
 }
 
 func getUsageText() string {
-	return `Usage: s3dl <bucket-region> s3://<bucket-name>/<key> <local-path>`
+	return `
+	Usage: s3dl <bucket-region> s3://<bucket-name>/<prefix>
+	Example: s3dl us-west-2 s3://my-bucket/path/to/folder/
+	`
 }
 
 func getS3BucketName(s3Path string) string {

@@ -7,8 +7,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/aws"
-	"io/ioutil"
-	"os"
 )
 
 func createAwsSession(awsRegion string) (*session.Session, error) {
@@ -37,23 +35,4 @@ func listFiles(s3Session *s3.S3, bucketName string, prefix string) ([]*s3.Object
 	}
 
 	return output.Contents, nil
-}
-
-func downloadFile(s3Session *s3.S3, bucketName string, key string, localPath string) error {
-	output, err := s3Session.GetObject(&s3.GetObjectInput{
-		Bucket: aws.String(bucketName),
-		Key: aws.String(key),
-	})
-	if err != nil {
-		return fmt.Errorf("Failed to download file from S3: %v", err)
-	}
-
-	bytes, err := ioutil.ReadAll(output.Body)
-	if err != nil {
-		return fmt.Errorf("Failed to read from downloaded file: %v", err)
-	}
-
-	ioutil.WriteFile(localPath, bytes, os.ModePerm)
-
-	return nil
 }
