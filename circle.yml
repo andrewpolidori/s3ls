@@ -28,5 +28,5 @@ deployment:
       - unzip -o "glide-v0.12.3-linux-amd64.zip" -d ~/glide
       - cd ~/$CIRCLE_PROJECT_REPONAME
       - ~/glide/linux-amd64/glide install
-      - build-go-binaries --app-name s3dl --dest-path bin --ld-flags "-X main.VERSION=$CIRCLE_TAG"
+      - build-go-binaries --app-name s3ls --dest-path bin --ld-flags "-X main.VERSION=$CIRCLE_TAG"
       - upload-github-release-assets bin/*
