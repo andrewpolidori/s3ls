@@ -8,7 +8,7 @@ dependencies:
     - curl -Ls https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version v0.0.15
     - gruntwork-install --module-name "circleci-helpers" --repo "https://github.com/gruntwork-io/module-ci" --tag "v0.3.8"
     - gruntwork-install --module-name "gruntwork-module-circleci-helpers" --repo "https://github.com/gruntwork-io/module-ci" --tag "v0.3.8"
-    - install-go-version --go-version 1.8.0
+    - install-go-version --go-version 1.8
     - place-repo-in-gopath
 
   cache_directories:
