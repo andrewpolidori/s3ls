@@ -1,0 +1,23 @@
+machine:
+  environment:
+    PATH: $PATH:$HOME/glide/linux-amd64
+
+dependencies:
+  override:
+    # Install the gruntwork-module-circleci-helpers and use it to configure the build environment and run tests.
+    - curl -Ls https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version 0.0.15
+    - gruntwork-install --module-name "circleci-helpers" --repo "https://github.com/gruntwork-io/module-ci" --tag "v0.3.8"
+    - gruntwork-install --module-name "gruntwork-module-circleci-helpers" --repo "https://github.com/gruntwork-io/module-ci" --tag "v0.3.8"
+    - install-go-version --go-version 1.8.0
+    - place-repo-in-gopath
+
+  cache_directories:
+    - ~/glide
+
+deployment:
+  release:
+    tag: /v.*/
+    commands:
+      # If a new release is tagged in GitHub, build the binaries and upload them to GitHub.
+      - build-go-binaries --app-name fetch --dest-path bin --ld-flags "-X main.VERSION=$CIRCLE_TAG"
+      - upload-github-release-assets bin/*
