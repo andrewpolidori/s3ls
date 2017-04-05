@@ -14,6 +14,11 @@ dependencies:
   cache_directories:
     - ~/glide
 
+
+test:
+  override:
+    - echo 'add tests here'
+
 deployment:
   release:
     tag: /v.*/
